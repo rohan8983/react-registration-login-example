@@ -8,21 +8,13 @@ exports.loginUser = function (req, res) {
     }
     loginUser.findOne({ username: req.body.username }, function (err, result) {
         if (err) {
-            console.log("DB ERROR: " + err);
+            console.log(err);
         }
-        if (result == null) {
-
+        if (result !== null && bcrypt.compareSync(req.body.password, result.password)) {
+            res.json({ ok: true, result });
         } else {
-            if (bcrypt.compareSync(req.body.password, result.password)) {
-                console.log("successfully login");
-                let responseJson = {
-                    token: 'fake-jwt-token'
-                };
-                res.json({ ok: true, json: () => responseJson });
-            } else {
-                ;
-            }
+            //res.sendStatus(404);
         }
-        return;
     });
+
 }

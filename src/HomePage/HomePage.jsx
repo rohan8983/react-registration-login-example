@@ -12,7 +12,13 @@ class HomePage extends React.Component {
             formData: {},
         };
     }
-
+    componentDidMount() {
+        const self = this;
+        const { dispatch } = this.props;
+        dispatch(userActions.getAll(function (data) {
+            self.setState({ data });
+        }));
+    }
     handleChange(event) {
         event.preventDefault();
         let formData = this.state.formData;
@@ -27,43 +33,67 @@ class HomePage extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         const formData = this.state.formData;
-        console.log(formData);
         const { dispatch } = this.props;
         dispatch(userActions.register_dir(formData));
     }
 
     render() {
-        const { user, users } = this.props;
-        return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-sm-12">
-                        <h4 className="uname"><i>{user.firstName} {user.lastName}</i></h4>
-                        <Link to="/login" className="logout">Logout</Link>
+        const { loggingIn } = this.props;
+        if (this.state.data !== undefined) {
+            var dir = this.state.data.result;
+            return (
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <a herf="#"><img src="https://i.pinimg.com/736x/c6/a4/64/c6a4645d9f9af45a9c9d7b094c18a47a--portrait-ideas-girl-photos.jpg" className="propic" alt="" /></a><h4 className="uname"><i>James Bond</i></h4>
+                            <Link to="/" className="logout">Logout</Link>
+                        </div>
                     </div>
-                </div>
-                <div align="center">
-                    <input type="text" className="col-xs-3" name="address" value={this.state.formData["address"]} onChange={this.handleChange.bind(this)} /> &nbsp; &nbsp;
-                        <input type="number" className=" col-xs-3" name="mobile" value={this.state.formData["mobile"]} onChange={this.handleChange.bind(this)} /> &nbsp;&nbsp;
+                    <div className="content">
+                        <label>Name: </label> <input type="text" className="col-xs-3" name="name" value={this.state.formData["name"]} onChange={this.handleChange.bind(this)} /> &nbsp; &nbsp;
+                        <label>Mobile: </label> <input type="number" className=" col-xs-3" name="mobile" value={this.state.formData["mobile"]} onChange={this.handleChange.bind(this)} /> &nbsp;&nbsp;
                         <button type="button" className="btn btn-primary btn-sm" onClick={this.handleSubmit.bind(this)}>Save</button>&nbsp;&nbsp;
                         <button type="button" className="btn btn-danger btn-sm">Cancel</button>
-                </div>
-                <br />
-                <div align="center">
-                    sample table data
-                </div>
-            </div>
-
-        );
+                    </div><br /><br />
+                    <div className="data">
+                        <table className="table table-hover">
+                            <thead className="thead-inverse">
+                                <tr>
+                                    <th className="text-center">Name</th>
+                                    <th className="text-center">Mobile</th>
+                                    <th className="text-center">Edit</th>
+                                    <th className="text-center">Delete</th>
+                                </tr>
+                            </thead>
+                            {
+                                dir.map((items, index) => {
+                                    return (
+                                        <tbody key={index}>
+                                            <tr>
+                                                <td width="220px" align="center">{items.name}</td>
+                                                <td width="220px" align="center">{items.mobile} </td>
+                                                <td width="150px" align="center"><a herf="#">Edit</a></td>
+                                                <td width="150px" align="center"><a herf="#">Delete</a></td>
+                                            </tr>
+                                        </tbody>
+                                    )
+                                })
+                            }
+                        </table>
+                    </div>
+                </div >
+            );
+        } else {
+            return null;
+        }
     }
 }
 
 function mapStateToProps(state) {
-    const { users, authentication } = state;
-    const { user } = authentication;
+    const { authentication } = state;
+    const { loggingIn } = authentication;
     return {
-        user,
-        users,
+        loggingIn,
     };
 }
 

@@ -8,13 +8,10 @@ class LoginPage extends React.Component {
     constructor(props) {
         super(props);
 
-        // reset login status
-        this.props.dispatch(userActions.logout());
-
         this.state = {
             username: '',
             password: '',
-            submitted: false
+            submitted: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -27,14 +24,14 @@ class LoginPage extends React.Component {
     }
 
     handleSubmit(e) {
-        console.log('submit', this);
         e.preventDefault();
-
         this.setState({ submitted: true });
         const { username, password } = this.state;
         const { dispatch } = this.props;
         if (username && password) {
-            dispatch(userActions.login(username, password, this))
+            dispatch(userActions.login(username, password, this, function (user) {
+                console.log("user", user);
+            }));
         }
     }
 
@@ -75,7 +72,7 @@ class LoginPage extends React.Component {
 function mapStateToProps(state) {
     const { loggingIn } = state.authentication;
     return {
-        loggingIn
+        loggingIn,
     };
 }
 

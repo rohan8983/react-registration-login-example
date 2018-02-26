@@ -24,15 +24,17 @@ class App extends React.Component {
         const { alert } = this.props;
         return (
             <div className="jumbotron">
-                <div className="container">
+                <div className="container">              
                     <div className="col-sm-8 col-sm-offset-2">
-                        {alert.message &&
+                    {alert.message &&
                             <div className={`alert ${alert.type}`}>{alert.message}</div>
                         }
                         <Router history={history}>
                             <div>
-                                <PrivateRoute exact path="/" component={HomePage} />
-                                <Route path="/login" component={LoginPage} />
+                                <Route exact path='/' component={LoginPage} />
+
+                                <Route path="/home" component={HomePage} />
+
                                 <Route path="/register" component={RegisterPage} />
                             </div>
                         </Router>

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 mongoose.Promise = require('bluebird');
 
 const DirectorySchema = new Schema({
-    address: { type: String, required: true },
+    name: { type: String, required: true },
     mobile: { type: String, required: true },
 });
 

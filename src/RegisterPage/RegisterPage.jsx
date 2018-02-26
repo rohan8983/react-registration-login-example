@@ -85,7 +85,7 @@ class RegisterPage extends React.Component {
                     <div className="form-group">
                         <button className="btn btn-primary">Register</button>
                         {registering && <img src="#" />}
-                        <Link to="/login" className="btn btn-link">Cancel</Link>
+                        <Link to="/" className="btn btn-link">Cancel</Link>
                     </div>
                 </form>
             </div>

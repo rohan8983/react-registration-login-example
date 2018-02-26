@@ -10,6 +10,7 @@ var defaultUser = require('./defaultUser.js');
 var registerRoute = require('./routes/register.route');
 var loginRoute = require('./routes/login.route');
 var SaveDirectoryRoute = require('./routes/saveDirectory.route');
+var getAll = require('./routes/getAll.route');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,7 +28,7 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
 app.post('/registerUser', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), registerRoute);
 app.post('/login', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), loginRoute);
 app.post('/register_dir', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), SaveDirectoryRoute);
-
+app.post('/getAll', getAll);
 //start app
 app.listen(serverConfig.port, function (error) {
     if (!error) {
