@@ -43,20 +43,23 @@ function register(user) {
 }
 
 //function for registering users data
-function register_dir(formData) {
-    console.log(config.serverURL);
+function register_dir(formData, _id) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ formData })
+        body: JSON.stringify({
+            _id: _id,
+            formData,
+        })
     };
 
     return fetch(config.serverURL + '/register_dir', requestOptions).then(handleResponse);
 }
 
-function getAll() {
+function getAll(user) {
     const requestOptions = {
         method: 'POST',
+        body: JSON.stringify({ _id: user.result._id }),
         headers: { 'Content-Type': 'application/json' },
     };
     return fetch(config.serverURL + '/getAll', requestOptions).then(handleResponse);

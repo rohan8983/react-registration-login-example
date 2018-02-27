@@ -1,8 +1,11 @@
 var Directory = require('../models/directory');
 
 exports.saveDirectory = function (req, res) {
-    const data = req.body.formData;
-    console.log(data);
+    const data = {
+        userId: req.body._id,
+        name: req.body.formData.name,
+        mobile: req.body.formData.mobile,
+    }
     var newDirectory = new Directory(data);
 
     newDirectory.save((err, saved) => {
@@ -10,10 +13,12 @@ exports.saveDirectory = function (req, res) {
             console.log(err);
             res.status(500).send(err);
         } else {
-            res.json({
-                saved,
-                status: true,
-            });
+            Directory.find({ userId: saved.userId }, function (err, result) {
+                res.json({
+                    result,
+                    status: true,
+                });
+            })
             console.log("success");
         }
     })

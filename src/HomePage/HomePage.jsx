@@ -11,14 +11,21 @@ class HomePage extends React.Component {
         this.state = {
             formData: {},
         };
+        this.handleDelete = this.handleDelete.bind(this);
     }
+
+    //componentDidMount() life cycle method
     componentDidMount() {
+        let user = JSON.parse(localStorage.getItem('user'));
+        this.setState({ user: user.result });
         const self = this;
         const { dispatch } = this.props;
-        dispatch(userActions.getAll(function (data) {
+        dispatch(userActions.getAll(user, function (data) {
             self.setState({ data });
         }));
     }
+
+    //function handle change for update the state
     handleChange(event) {
         event.preventDefault();
         let formData = this.state.formData;
@@ -30,11 +37,22 @@ class HomePage extends React.Component {
         this.setState({ formData });
     }
 
+    //function handle submit for submitting data into db
     handleSubmit(event) {
         event.preventDefault();
+        var self = this;
+        const _id = this.state.user._id;
         const formData = this.state.formData;
         const { dispatch } = this.props;
-        dispatch(userActions.register_dir(formData));
+        dispatch(userActions.register_dir(formData, _id, function (newdata) {
+            self.setState({ data: newdata });
+        }));
+    }
+
+    //function handle delete for deleting the users directory
+    handleDelete(e) {
+        e.preventDefault();
+        console.log(e.target.value);
     }
 
     render() {
@@ -45,8 +63,8 @@ class HomePage extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-12">
-                            <a herf="#"><img src="https://i.pinimg.com/736x/c6/a4/64/c6a4645d9f9af45a9c9d7b094c18a47a--portrait-ideas-girl-photos.jpg" className="propic" alt="" /></a><h4 className="uname"><i>James Bond</i></h4>
-                            <Link to="/" className="logout">Logout</Link>
+                            <a herf="#"><img src="https://i.pinimg.com/736x/c6/a4/64/c6a4645d9f9af45a9c9d7b094c18a47a--portrait-ideas-girl-photos.jpg" className="propic" alt="" /></a><h4 className="uname"><i>{this.state.user.firstName} {this.state.user.lastName}</i></h4>
+                            <Link to="/" className="logout"><i className="material-icons">power_settings_new</i></Link>
                         </div>
                     </div>
                     <div className="content">
@@ -70,10 +88,10 @@ class HomePage extends React.Component {
                                     return (
                                         <tbody key={index}>
                                             <tr>
-                                                <td width="220px" align="center">{items.name}</td>
+                                                <td width="220px" align="center" >{items.name}</td>
                                                 <td width="220px" align="center">{items.mobile} </td>
-                                                <td width="150px" align="center"><a herf="#">Edit</a></td>
-                                                <td width="150px" align="center"><a herf="#">Delete</a></td>
+                                                <td width="150px" align="center"><a herf="#"><i className="material-icons">border_color</i></a></td>
+                                                <td width="150px" align="center"><a herf="javascript:;" ><i className="material-icons" onClick={this.handleDelete} value={items._id}>delete</i></a></td>
                                             </tr>
                                         </tbody>
                                     )

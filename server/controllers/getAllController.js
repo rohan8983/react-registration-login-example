@@ -1,7 +1,8 @@
 var Directory = require('../models/directory');
 
 exports.getAll = function (req, res) {
-    Directory.find({}, function (err, result) {
+    var userId = req.body._id;
+    Directory.find({ userId: userId }, function (err, result) {
         if (err) {
             console.log(err);
         }
