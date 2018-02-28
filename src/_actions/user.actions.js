@@ -10,11 +10,11 @@ export const userActions = {
     register_dir,
     getAll,
     deleteDir,
-
+    updateDir,
 };
 
 //user authentication
-function login(username, password, self, cb) {
+function login(username, password, cb) {
     return dispatch => {
         dispatch(request({ username, password }));
 
@@ -22,7 +22,6 @@ function login(username, password, self, cb) {
             .then(
                 user => {
                     dispatch(success(user));
-                    self.props.history.push('/home');
                     cb(user);
                 },
                 error => {
@@ -110,13 +109,14 @@ function getAll(user, cb) {
 }//getAll end
 
 //delete function for deleting user directory
-function deleteDir() {
+function deleteDir(obj, cd) {
     return dispatch => {
         dispatch(request());
-        userService.deleteDir()
-            .then(() => {
-                dispatch(success());
+        userService.deleteDir(obj)
+            .then((data) => {
+                dispatch(success(data));
                 dispatch(alertActions.success('Directory Removed'));
+                cd(data);
             },
                 error => {
                     dispatch(failure(error));
@@ -124,5 +124,28 @@ function deleteDir() {
                 }
             );
     }
-};
+    function request() { return { type: userConstants.DELETE_DIR_REQUEST } }
+    function success(data) { return { type: userConstants.DELETE_DIR_SUCCESS, data } }
+    function failure(error) { return { type: userConstants.DELETE_DIR_FAILURE, error } }
+};//deleteDir end
+
+function updateDir(value, userId, cd) {
+    return dispatch => {
+        dispatch(request());
+        userService.updateDir(value, userId)
+            .then((data) => {
+                dispatch(success(data));
+                dispatch(alertActions.success('Update Successfully'));
+                cd(data);
+            },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    }
+    function request() { return { type: userConstants.DELETE_DIR_REQUEST } }
+    function success(data) { return { type: userConstants.DELETE_DIR_SUCCESS, data } }
+    function failure(error) { return { type: userConstants.DELETE_DIR_FAILURE, error } }
+}
 

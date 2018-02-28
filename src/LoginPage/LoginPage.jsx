@@ -25,15 +25,17 @@ class LoginPage extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
+        const self = this;
         this.setState({ submitted: true });
         const { username, password } = this.state;
         const { dispatch } = this.props;
         if (username && password) {
-            dispatch(userActions.login(username, password, this, function (user) {
+            dispatch(userActions.login(username, password, function (user) {
                 localStorage.setItem('user', JSON.stringify(user));
-                this.setState({ user: user });
+                self.props.history.push('/home');
             }));
         }
+        console.log("login", this.state.user);
     }
 
     render() {

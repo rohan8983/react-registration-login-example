@@ -11,6 +11,8 @@ var registerRoute = require('./routes/register.route');
 var loginRoute = require('./routes/login.route');
 var SaveDirectoryRoute = require('./routes/saveDirectory.route');
 var getAll = require('./routes/getAll.route');
+var delete_dir = require('./routes/delete_dir.route');
+var update_dir = require('./routes/update_dir.route');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,7 +30,10 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
 app.post('/registerUser', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), registerRoute);
 app.post('/login', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), loginRoute);
 app.post('/register_dir', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), SaveDirectoryRoute);
-app.post('/getAll', getAll);
+app.post('/getAll', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), getAll);
+app.post('/delete', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), delete_dir);
+app.post('/update', bodyParser.json({}), bodyParser.urlencoded({ extended: true }), update_dir);
+
 //start app
 app.listen(serverConfig.port, function (error) {
     if (!error) {

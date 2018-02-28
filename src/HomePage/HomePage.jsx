@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../_actions';
+import { alertActions } from '../_actions/alert.actions'
 import './homepage.css';
 
 class HomePage extends React.Component {
@@ -10,8 +11,8 @@ class HomePage extends React.Component {
         super(props);
         this.state = {
             formData: {},
+            flag: false,
         };
-        this.handleDelete = this.handleDelete.bind(this);
     }
 
     //componentDidMount() life cycle method
@@ -41,18 +42,46 @@ class HomePage extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         var self = this;
-        const _id = this.state.user._id;
-        const formData = this.state.formData;
         const { dispatch } = this.props;
-        dispatch(userActions.register_dir(formData, _id, function (newdata) {
-            self.setState({ data: newdata });
-        }));
+        const formData = this.state.formData;
+        if (this.state.flag) {
+            var userId = this.state.user._id;
+            dispatch(userActions.updateDir(formData, userId, function (newData) {
+                self.setState({ data: newData, flag: false });
+            }));
+        } else {
+            const _id = this.state.user._id;
+            dispatch(userActions.register_dir(formData, _id, function (newdata) {
+                self.setState({ data: newdata });
+                //dispatch(alertActions.clear());
+            }));
+        }
+        self.setState({ formData: { name: '', mobile: '' } });
     }
 
     //function handle delete for deleting the users directory
-    handleDelete(e) {
-        e.preventDefault();
-        console.log(e.target.value);
+    handleDelete(id) {
+        var obj = {
+            id: id,
+            user: this.state.user,
+        }
+        var self = this;
+        const { dispatch } = this.props;
+        dispatch(userActions.deleteDir(obj, function (data) {
+            self.setState({ data: data });
+        }));
+    }
+
+    handleEdit(value) {
+        let obj = {
+            _id: value._id,
+            name: value.name,
+            mobile: value.mobile,
+        }
+        this.setState({
+            formData: obj,
+            flag: true,
+        });
     }
 
     render() {
@@ -64,14 +93,14 @@ class HomePage extends React.Component {
                     <div className="row">
                         <div className="col-sm-12">
                             <a herf="#"><img src="https://i.pinimg.com/736x/c6/a4/64/c6a4645d9f9af45a9c9d7b094c18a47a--portrait-ideas-girl-photos.jpg" className="propic" alt="" /></a><h4 className="uname"><i>{this.state.user.firstName} {this.state.user.lastName}</i></h4>
-                            <Link to="/" className="logout"><i className="material-icons">power_settings_new</i></Link>
+                            <Link to="/" className="logout"><i className="material-icons" name="logout">power_settings_new</i></Link>
                         </div>
                     </div>
                     <div className="content">
                         <label>Name: </label> <input type="text" className="col-xs-3" name="name" value={this.state.formData["name"]} onChange={this.handleChange.bind(this)} /> &nbsp; &nbsp;
                         <label>Mobile: </label> <input type="number" className=" col-xs-3" name="mobile" value={this.state.formData["mobile"]} onChange={this.handleChange.bind(this)} /> &nbsp;&nbsp;
                         <button type="button" className="btn btn-primary btn-sm" onClick={this.handleSubmit.bind(this)}>Save</button>&nbsp;&nbsp;
-                        <button type="button" className="btn btn-danger btn-sm">Cancel</button>
+                        <button type="button" className="btn btn-danger btn-sm" onClick={() => { this.setState({ formData: { name: '', mobile: '' } }); }}>Cancel</button>
                     </div><br /><br />
                     <div className="data">
                         <table className="table table-hover">
@@ -90,8 +119,8 @@ class HomePage extends React.Component {
                                             <tr>
                                                 <td width="220px" align="center" >{items.name}</td>
                                                 <td width="220px" align="center">{items.mobile} </td>
-                                                <td width="150px" align="center"><a herf="#"><i className="material-icons">border_color</i></a></td>
-                                                <td width="150px" align="center"><a herf="javascript:;" ><i className="material-icons" onClick={this.handleDelete} value={items._id}>delete</i></a></td>
+                                                <td width="150px" align="center"><i className="material-icons sym-btn" onClick={this.handleEdit.bind(this, items)}>border_color</i></td>
+                                                <td width="150px" align="center"><i className="material-icons sym-btn" onClick={this.handleDelete.bind(this, items._id)}>delete</i></td>
                                             </tr>
                                         </tbody>
                                     )

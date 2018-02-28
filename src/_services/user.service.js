@@ -6,6 +6,8 @@ export const userService = {
     register,
     register_dir,
     getAll,
+    deleteDir,
+    updateDir,
 };
 
 //login function 
@@ -63,6 +65,26 @@ function getAll(user) {
         headers: { 'Content-Type': 'application/json' },
     };
     return fetch(config.serverURL + '/getAll', requestOptions).then(handleResponse);
+}//end of getAll
+
+//delete function for delete users directory
+function deleteDir(obj) {
+    const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({ obj }),
+        headers: { 'Content-Type': 'application/json' },
+    };
+    return fetch(config.serverURL + '/delete', requestOptions).then(handleResponse);
+}//end of deleteDir
+
+//update function for edit users previous data 
+function updateDir(data, userId) {
+    const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({ data, userId: userId }),
+        headers: { 'Content-Type': 'application/json' },
+    };
+    return fetch(config.serverURL + '/update', requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {
