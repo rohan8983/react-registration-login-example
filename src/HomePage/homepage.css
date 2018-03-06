@@ -11,19 +11,29 @@
 .content{
     position: relative;
     left:200px;
+    bottom:40px;
     align-content: center;
 }
 .data{
     position: relative;
-    left:180px;   
+    left:180px;
+    bottom: 20px; 
+    background-image: "./contacts.gif"  
 }
 .propic{
     position: relative;
     left: 0px; 
     border-radius: 50%;
-    height: 50px;
-    width: 50px;  
+    height: 35px;
+    width: 40px; 
+    bottom: 9px; 
 }
 .sym-btn{
     cursor: pointer;
+}
+.search{
+    position: relative;
+    left:400px;
+    bottom: 30px;
+    align-content: center;
 }

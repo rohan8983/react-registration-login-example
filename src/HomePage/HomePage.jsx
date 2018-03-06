@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { userActions } from '../_actions';
 import { alertActions } from '../_actions/alert.actions'
 import './homepage.css';
-
+import userPic from './user.png';
+import contacts from './contacts.gif';
 class HomePage extends React.Component {
 
     constructor(props) {
@@ -12,6 +13,7 @@ class HomePage extends React.Component {
         this.state = {
             formData: {},
             flag: false,
+            orgData: {},
         };
     }
 
@@ -22,7 +24,7 @@ class HomePage extends React.Component {
         const self = this;
         const { dispatch } = this.props;
         dispatch(userActions.getAll(user, function (data) {
-            self.setState({ data });
+            self.setState({ data, orgData: data });
         }));
     }
 
@@ -84,6 +86,25 @@ class HomePage extends React.Component {
         });
     }
 
+    handleSearch() {
+        var value = this.state.formData.search.toLowerCase(),
+
+            matches = this.state.data.result.filter(function (item) {
+                return item.name.substring(0, value.length).toLowerCase() === value || item.mobile.substring(0, value.length).toLowerCase() === value;
+            });
+        var result = matches;
+        var searchData = {
+            result,
+        }
+        console.log('result', result);
+        this.setState({ data: searchData });
+
+    }
+
+    handleLogout() {
+        userActions.logout();
+    }
+
     render() {
         const { loggingIn } = this.props;
         if (this.state.data !== undefined) {
@@ -92,8 +113,8 @@ class HomePage extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-12">
-                            <a herf="#"><img src="https://i.pinimg.com/736x/c6/a4/64/c6a4645d9f9af45a9c9d7b094c18a47a--portrait-ideas-girl-photos.jpg" className="propic" alt="" /></a><h4 className="uname"><i>{this.state.user.firstName} {this.state.user.lastName}</i></h4>
-                            <Link to="/" className="logout"><i className="material-icons" name="logout">power_settings_new</i></Link>
+                            <a herf="#"><img src={userPic} className="propic" alt="userPic" /></a><h4 className="uname"><i>{this.state.user.firstName} {this.state.user.lastName}</i></h4>
+                            <Link to="/" onClick={this.handleLogout.bind(this)} className="logout"><i className="material-icons" name="logout">power_settings_new</i></Link>
                         </div>
                     </div>
                     <div className="content">
@@ -101,7 +122,11 @@ class HomePage extends React.Component {
                         <label>Mobile: </label> <input type="number" className=" col-xs-3" name="mobile" value={this.state.formData["mobile"]} onChange={this.handleChange.bind(this)} /> &nbsp;&nbsp;
                         <button type="button" className="btn btn-primary btn-sm" onClick={this.handleSubmit.bind(this)}>Save</button>&nbsp;&nbsp;
                         <button type="button" className="btn btn-danger btn-sm" onClick={() => { this.setState({ formData: { name: '', mobile: '' } }); }}>Cancel</button>
-                    </div><br /><br />
+                    </div><br />
+                    <div className="search">
+                        <input type="text" className="col-xs-3" name="search" value={this.state.formData["search"]} onChange={this.handleChange.bind(this)} /> &nbsp; &nbsp;
+                        <button type="button" className="btn btn-success btn-sm" onClick={this.handleSearch.bind(this)}>Search</button>
+                    </div><br />
                     <div className="data">
                         <table className="table table-hover">
                             <thead className="thead-inverse">
