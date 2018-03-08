@@ -8,6 +8,7 @@ export const userService = {
     getAll,
     deleteDir,
     updateDir,
+    search,
 };
 
 //login function 
@@ -86,6 +87,17 @@ function updateDir(data, userId) {
     };
     return fetch(config.serverURL + '/update', requestOptions).then(handleResponse);
 }
+
+//function for searching directories
+function search(formData, id) {
+    console.log("service", formData);
+    const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({ userId: id, formData }),
+        headers: { 'Content-Type': 'application/json' },
+    };
+    return fetch(config.serverURL + '/search', requestOptions).then(handleResponse);
+}//end of search
 
 function handleResponse(response) {
     if (!response.ok) {

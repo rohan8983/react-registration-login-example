@@ -6,6 +6,8 @@ import { alertActions } from '../_actions/alert.actions'
 import './homepage.css';
 import userPic from './user.png';
 import contacts from './contacts.gif';
+import Pagination from 'react-js-pagination';
+
 class HomePage extends React.Component {
 
     constructor(props) {
@@ -14,6 +16,7 @@ class HomePage extends React.Component {
             formData: {},
             flag: false,
             orgData: {},
+            activePage: 15,
         };
     }
 
@@ -26,6 +29,12 @@ class HomePage extends React.Component {
         dispatch(userActions.getAll(user, function (data) {
             self.setState({ data, orgData: data });
         }));
+    }
+
+    //handle page number change
+    handlePageChange(pageNumber) {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({ activePage: pageNumber });
     }
 
     //function handle change for update the state
@@ -96,9 +105,24 @@ class HomePage extends React.Component {
         var searchData = {
             result,
         }
-        console.log('result', result);
         this.setState({ data: searchData });
+    }
 
+    handleSearchChange(event) {
+        event.preventDefault();
+        let formData = this.state.formData;
+        let name = event.target.name; // Field name
+        let value = event.target.value; // Field value
+        var current = this;
+        formData[name] = value;
+
+        this.setState({ formData });
+        var userId = this.state.user._id;
+        const { dispatch } = this.props;
+
+        dispatch(userActions.search(formData, userId, function (newdata) {
+            current.setState({ data: newdata })
+        }));
     }
 
     handleLogout() {
@@ -124,7 +148,7 @@ class HomePage extends React.Component {
                         <button type="button" className="btn btn-danger btn-sm" onClick={() => { this.setState({ formData: { name: '', mobile: '' } }); }}>Cancel</button>
                     </div><br />
                     <div className="search">
-                        <input type="text" className="col-xs-3" name="search" value={this.state.formData["search"]} onChange={this.handleChange.bind(this)} /> &nbsp; &nbsp;
+                        <input type="text" className="col-xs-3" name="search" value={this.state.formData["search"]} onChange={this.handleSearchChange.bind(this)} /> &nbsp; &nbsp;
                         <button type="button" className="btn btn-success btn-sm" onClick={this.handleSearch.bind(this)}>Search</button>
                     </div><br />
                     <div className="data">

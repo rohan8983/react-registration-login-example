@@ -11,6 +11,7 @@ export const userActions = {
     getAll,
     deleteDir,
     updateDir,
+    search,
 };
 
 //user authentication
@@ -129,6 +130,7 @@ function deleteDir(obj, cd) {
     function failure(error) { return { type: userConstants.DELETE_DIR_FAILURE, error } }
 };//deleteDir end
 
+//function  for updating user direcotory
 function updateDir(value, userId, cd) {
     return dispatch => {
         dispatch(request());
@@ -147,5 +149,21 @@ function updateDir(value, userId, cd) {
     function request() { return { type: userConstants.DELETE_DIR_REQUEST } }
     function success(data) { return { type: userConstants.DELETE_DIR_SUCCESS, data } }
     function failure(error) { return { type: userConstants.DELETE_DIR_FAILURE, error } }
-}
+}//end of updateDir()
+
+//function for search directory
+function search(formData, id, cb) {
+    return dispatch => {
+        userService.search(formData, id)
+            .then((data) => {
+                cb(data);
+            },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    }
+    function failure(error) { return { type: userConstants.DELETE_DIR_FAILURE, error } }
+}//end of Search() 
 
