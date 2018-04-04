@@ -90,7 +90,6 @@ function updateDir(data, userId) {
 
 //function for searching directories
 function search(formData, id) {
-    console.log("service", formData);
     const requestOptions = {
         method: 'POST',
         body: JSON.stringify({ userId: id, formData }),

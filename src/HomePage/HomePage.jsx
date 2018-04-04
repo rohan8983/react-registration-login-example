@@ -5,19 +5,28 @@ import { userActions } from '../_actions';
 import { alertActions } from '../_actions/alert.actions'
 import './homepage.css';
 import userPic from './user.png';
-import contacts from './contacts.gif';
-import Pagination from 'react-js-pagination';
+import logoutPic from './logout.png';
+//import Pagination from '../Pagination/Pagination';
 
 class HomePage extends React.Component {
 
     constructor(props) {
         super(props);
+
+
         this.state = {
-            formData: {},
+            formData: { name: '', mobile: '', search: '', },
             flag: false,
-            orgData: {},
-            activePage: 15,
+            items: {},
+            pageOfItems: [],
         };
+
+        this.onChangePage = this.onChangePage.bind(this);
+    }
+
+    onChangePage(pageOfItems) {
+        //update state with new page of items
+        this.setState({ pageOfItems: pageOfItems });
     }
 
     //componentDidMount() life cycle method
@@ -27,14 +36,8 @@ class HomePage extends React.Component {
         const self = this;
         const { dispatch } = this.props;
         dispatch(userActions.getAll(user, function (data) {
-            self.setState({ data, orgData: data });
+            self.setState({ data });
         }));
-    }
-
-    //handle page number change
-    handlePageChange(pageNumber) {
-        console.log(`active page is ${pageNumber}`);
-        this.setState({ activePage: pageNumber });
     }
 
     //function handle change for update the state
@@ -137,8 +140,8 @@ class HomePage extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-sm-12">
-                            <a herf="#"><img src={userPic} className="propic" alt="userPic" /></a><h4 className="uname"><i>{this.state.user.firstName} {this.state.user.lastName}</i></h4>
-                            <Link to="/" onClick={this.handleLogout.bind(this)} className="logout"><i className="material-icons" name="logout">power_settings_new</i></Link>
+                            <a herf="#" title="Profile"><img src={userPic} className="propic" alt="userPic" /></a><h4 className="uname"><i>{this.state.user.firstName} {this.state.user.lastName}</i></h4>
+                            <Link to="/" onClick={this.handleLogout.bind(this)} className="logout" title="Logout"><img src={logoutPic} className="logoutpic" /></Link>
                         </div>
                     </div>
                     <div className="content">
@@ -176,6 +179,7 @@ class HomePage extends React.Component {
                                 })
                             }
                         </table>
+                         {/* <Pagination items={this.state.items} onChangePage={this.onChangePage} /> */}
                     </div>
                 </div >
             );

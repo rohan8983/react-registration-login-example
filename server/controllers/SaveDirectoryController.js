@@ -18,8 +18,7 @@ exports.saveDirectory = function (req, res) {
                     result,
                     status: true,
                 });
-            })
-            console.log("success");
+            });
         }
-    })
+    });
 }

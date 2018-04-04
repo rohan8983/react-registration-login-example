@@ -22,12 +22,14 @@ function login(username, password, cb) {
         userService.login(username, password)
             .then(
                 user => {
-                    dispatch(success(user));
-                    cb(user);
-                },
-                error => {
-                    dispatch(failure(error));
-                    dispatch(alertActions.error(error));
+                    if (user.ok) {
+                        dispatch(success(user));
+                        cb(user);
+                    } else {
+                        var error = "Hmm, we don't recognize that Username or Password. Please try again";
+                        dispatch(failure(error));
+                        dispatch(alertActions.error(error));
+                    }
                 }
             );
     };

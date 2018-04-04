@@ -27,7 +27,6 @@ exports.regsiterUser = function (req, res) {
                         user: saved,
                         status: true
                     });
-                    console.log("User is successfully registered...!");
                 }
             });
         } else {

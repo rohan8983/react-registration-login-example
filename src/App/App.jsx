@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Switch, Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { history } from '../_helpers';
@@ -9,10 +9,13 @@ import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import { RegisterPage } from '../RegisterPage';
 
+
 class App extends React.Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+            isLogedIn: false,
+        }
         const { dispatch } = this.props;
         history.listen((location, action) => {
             // clear alert on location change
@@ -21,7 +24,9 @@ class App extends React.Component {
     }
 
     render() {
+
         const { alert } = this.props;
+
         return (
             <div className="jumbotron">
                 <div className="container">
@@ -30,13 +35,13 @@ class App extends React.Component {
                             <div className={`alert ${alert.type}`}>{alert.message}</div>
                         }
                         <Router history={history}>
-                            <div>
+                            <Switch>
                                 <Route exact path='/' component={LoginPage} />
 
                                 <Route path="/home" component={HomePage} />
 
                                 <Route path="/register" component={RegisterPage} />
-                            </div>
+                            </Switch>
                         </Router>
                     </div>
                 </div>
@@ -44,6 +49,7 @@ class App extends React.Component {
         );
     }
 }
+
 
 function mapStateToProps(state) {
     const { alert } = state;

@@ -3,6 +3,10 @@
     right: -1000px;
     bottom:80px;
 }
+.logoutpic{
+    width: 30px;
+    height: 30px;
+}
 .uname{
     position: relative;
     left: 60px;

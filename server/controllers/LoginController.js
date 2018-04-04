@@ -13,7 +13,7 @@ exports.loginUser = function (req, res) {
         if (result !== null && bcrypt.compareSync(req.body.password, result.password)) {
             res.json({ ok: true, result });
         } else {
-            //res.sendStatus(404);
+            res.json({ ok: false });
         }
     });
 
